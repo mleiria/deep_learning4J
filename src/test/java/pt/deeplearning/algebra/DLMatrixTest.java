@@ -45,7 +45,7 @@ class DLMatrixTest {
         components[3][3] = 1;
         DLMatrix a = new DLMatrix(components);
         LOG.info("Matrix a: \n" + a.toString());
-        DLMatrix b = a.transpose();
+        DLMatrix b = DLMatrixUtils.transpose(a);
         double[][] componentsTranspose = new double[4][4];
         componentsTranspose[0][0] = 16;
         componentsTranspose[0][1] = 5;
@@ -112,7 +112,7 @@ class DLMatrixTest {
             final DLMatrix matrixB = new DLMatrix(componentsMatrixB);
             LOG.info("Matrix b: \n" + matrixB.toString());
 
-            final DLMatrix result = matrixA.multiply(matrixB);
+            final DLMatrix result = DLMatrixUtils.multiply(matrixA, matrixB);
             LOG.info("Matrix result: \n" + result.toString());
             assertEquals(3, result.rows());
             assertEquals(2, result.columns());

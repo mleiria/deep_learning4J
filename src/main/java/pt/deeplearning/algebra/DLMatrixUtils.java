@@ -4,6 +4,102 @@ import static java.lang.Math.random;
 
 public class DLMatrixUtils {
 
+
+    /**
+     * @return true se a matriz for quadrada
+     */
+    public static boolean isSquare(final DLMatrix matrix) {
+        return matrix.rows() == matrix.columns();
+    }
+
+    /**
+     * @return Matrix ttransposta
+     */
+    public static DLMatrix transpose(final DLMatrix matrix) {
+        int n = matrix.rows();
+        int m = matrix.columns();
+        double[][] newComponents = new double[m][n];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                newComponents[j][i] = matrix.components[i][j];
+            }
+        }
+        return new DLMatrix(newComponents);
+    }
+
+    /**
+     * @param matrixA
+     * @param matrixB
+     * @return true se as duas matrizes forem iguais
+     */
+    public static boolean equals(final DLMatrix matrixA, final DLMatrix matrixB) {
+
+        //TODO Implementar
+        return false;
+    }
+
+    /**
+     * @param matrixA
+     * @param matrixB
+     * @return a soma das duas matrizes
+     */
+    public static DLMatrix add(final DLMatrix matrixA, final DLMatrix matrixB) {
+
+        //TODO Implementar
+        return null;
+    }
+
+    /**
+     * Adiciona o value a todos os elementos da matriz
+     * @param matrixA
+     * @param value
+     * @return a soma da matriz pelo elemento value
+     */
+    public static DLMatrix add(final DLMatrix matrixA, final double value) {
+
+        //TODO Implementar
+        return null;
+    }
+
+    /**
+     * @param matrixA
+     * @param matrixB
+     * @return a diferença das duas matrizes
+     */
+    public DLMatrix subtract(final DLMatrix matrixA, final DLMatrix matrixB) {
+
+        //TODO Implementar. Nota: podemos reaproveitar o método add para fazer o subtract
+        return null;
+    }
+
+    /**
+     * Multiplica cada elemento da matriz pelo valor
+     * @param matrix
+     * @param value o valor para multiplicr
+     * @return A matriz multiplicada por um escalar
+     */
+    public DLMatrix multiply(final DLMatrix matrix, final double value) {
+
+        //TODO Implementar
+        return null;
+    }
+
+    /**
+     * @param matrixA
+     * @param matrixB
+     * @return O produto das duas matrizes
+     * @throws IllegalArgumentException se o número de colunas desta matriz for diferente
+     *                                  do número de linhas da matriz recebida
+     */
+    public static DLMatrix multiply(final DLMatrix matrixA, final DLMatrix matrixB) {
+        if (matrixA.columns() != matrixB.rows()) {
+            throw new IllegalArgumentException("Illegal size.");
+        }
+        //TODO Implementar
+        return null;
+    }
+
+
     /**
      *
      * @param rows

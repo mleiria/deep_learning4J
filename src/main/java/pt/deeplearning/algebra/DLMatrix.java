@@ -5,7 +5,7 @@ package pt.deeplearning.algebra;
  */
 public class DLMatrix {
 
-    private final double[][] components;
+    protected final double[][] components;
 
     /**
      * Cria uma matriz a partir do arrau de doubles
@@ -66,81 +66,6 @@ public class DLMatrix {
         return components[n][m];
     }
 
-    /**
-     * @return true se a matriz for quadrada
-     */
-    public boolean isSquare() {
-        return rows() == columns();
-    }
-
-    /**
-     * @return Matrix ttransposta
-     */
-    public DLMatrix transpose() {
-        int n = rows();
-        int m = columns();
-        double[][] newComponents = new double[m][n];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                newComponents[j][i] = components[i][j];
-            }
-        }
-        return new DLMatrix(newComponents);
-    }
-
-    /**
-     * @param matrix
-     * @return true se as duas matrizes forem iguais
-     */
-    public boolean equals(final DLMatrix matrix) {
-
-        //TODO Implementar
-        return false;
-    }
-
-    /**
-     * @param matrix
-     * @return a soma das duas matrizes
-     */
-    public DLMatrix add(final DLMatrix matrix) {
-
-        //TODO Implementar
-        return null;
-    }
-
-    /**
-     * @param matrix
-     * @return a diferença das duas matrizes
-     */
-    public DLMatrix subtract(final DLMatrix matrix) {
-
-        //TODO Implementar. Nota: podemos reaproveitar o método add para fazer o subtract
-        return null;
-    }
-
-    /**
-     * @param value o valor para multiplicr
-     * @return A matriz multiplicada por um escalar
-     */
-    public DLMatrix multiply(final double value) {
-
-        //TODO Implementar
-        return null;
-    }
-
-    /**
-     * @param matrix
-     * @return O produto das duas matrizes
-     * @throws IllegalArgumentException se o número de colunas desta matriz for diferente
-     *                                  do número de linhas da matriz recebida
-     */
-    public DLMatrix multiply(final DLMatrix matrix) {
-        if (columns() != matrix.rows()) {
-            throw new IllegalArgumentException("Illegal size.");
-        }
-        //TODO Implementar
-        return null;
-    }
 
     /**
      * Returns a string representation of the Matrix.
