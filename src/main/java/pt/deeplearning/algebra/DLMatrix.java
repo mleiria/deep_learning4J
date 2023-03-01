@@ -141,13 +141,13 @@ public class DLMatrix {
         int n = rows();
         int m = columns();
         for (int i = 0; i < n; i++) {
-            separator[0] = '{';
+            separator[0] = '[';
             for (int j = 0; j < m; j++) {
                 sb.append(separator);
                 sb.append(components[i][j]);
                 separator[0] = ' ';
             }
-            sb.append('}');
+            sb.append(']');
             sb.append('\n');
         }
         return sb.toString();
