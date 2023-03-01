@@ -65,7 +65,7 @@ class DLMatrixTest {
         componentsTranspose[3][3] = 1;
         DLMatrix c = new DLMatrix(componentsTranspose);
         LOG.info("Matrix a transposed: \n" + b.toString());
-        LOG.info("Matrix tocheck: \n" + c.toString());
+        LOG.info("Matrix toCheck: \n" + c.toString());
         assertTrue(b.equals(c));
     }
 
@@ -83,6 +83,53 @@ class DLMatrixTest {
 
     @Test
     void multiply() {
+        try {
+            final double[][] componentsMatrixA = new double[3][4];
+            componentsMatrixA[0][0] = 1.0;
+            componentsMatrixA[0][1] = 2.0;
+            componentsMatrixA[0][2] = 3.0;
+            componentsMatrixA[0][3] = 4.0;
+            componentsMatrixA[1][0] = 5.0;
+            componentsMatrixA[1][1] = 6.0;
+            componentsMatrixA[1][2] = 7.0;
+            componentsMatrixA[1][3] = 8.0;
+            componentsMatrixA[2][0] = 9.0;
+            componentsMatrixA[2][1] = 10.0;
+            componentsMatrixA[2][2] = 11.0;
+            componentsMatrixA[2][3] = 12.0;
+            final DLMatrix matrixA = new DLMatrix(componentsMatrixA);
+            LOG.info("Matrix a: \n" + matrixA.toString());
+
+            final double[][] componentsMatrixB = new double[4][2];
+            componentsMatrixB[0][0] = 13.0;
+            componentsMatrixB[0][1] = 14.0;
+            componentsMatrixB[1][0] = 15.0;
+            componentsMatrixB[1][1] = 16.0;
+            componentsMatrixB[2][0] = 17.0;
+            componentsMatrixB[2][1] = 18.0;
+            componentsMatrixB[3][0] = 19.0;
+            componentsMatrixB[3][1] = 20.0;
+            final DLMatrix matrixB = new DLMatrix(componentsMatrixB);
+            LOG.info("Matrix b: \n" + matrixB.toString());
+
+            final DLMatrix result = matrixA.multiply(matrixB);
+            LOG.info("Matrix result: \n" + result.toString());
+            assertEquals(3, result.rows());
+            assertEquals(2, result.columns());
+
+            assertEquals(170.0, result.component(0, 0));
+            assertEquals(180.0, result.component(0, 1));
+            assertEquals(426.0, result.component(1, 0));
+            assertEquals(452.0, result.component(1, 1));
+            assertEquals(682.0, result.component(2, 0));
+            assertEquals(724.0, result.component(2, 1));
+        }catch (Exception e){
+            LOG.severe(e.getMessage());
+            fail();
+        }
+
+
+
     }
 
     @Test

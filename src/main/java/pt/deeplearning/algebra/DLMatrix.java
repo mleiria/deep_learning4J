@@ -58,6 +58,15 @@ public class DLMatrix {
     }
 
     /**
+     * @param n int row num
+     * @param m int column num
+     * @return double matrix coords(n,m)
+     */
+    public double component(final int n, final int m) {
+        return components[n][m];
+    }
+
+    /**
      * @return true se a matriz for quadrada
      */
     public boolean isSquare() {
@@ -123,7 +132,7 @@ public class DLMatrix {
      * @param matrix
      * @return O produto das duas matrizes
      * @throws IllegalArgumentException se o número de colunas desta matriz for diferente
-     * do número de linhas da matriz recebida
+     *                                  do número de linhas da matriz recebida
      */
     public DLMatrix multiply(final DLMatrix matrix) {
         if (columns() != matrix.rows()) {
