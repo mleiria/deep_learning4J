@@ -122,9 +122,13 @@ public class DLMatrix {
     /**
      * @param matrix
      * @return O produto das duas matrizes
+     * @throws IllegalArgumentException se o número de colunas desta matriz for diferente
+     * do número de linhas da matriz recebida
      */
     public DLMatrix multiply(final DLMatrix matrix) {
-
+        if (columns() != matrix.rows()) {
+            throw new IllegalArgumentException("Illegal size.");
+        }
         //TODO Implementar
         return null;
     }

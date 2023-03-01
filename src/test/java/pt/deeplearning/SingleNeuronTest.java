@@ -1,7 +1,6 @@
 package pt.deeplearning;
 
 import org.junit.jupiter.api.Test;
-import pt.deeplearning.algebra.DLMatrix;
 import pt.deeplearning.algebra.DLVector;
 
 import java.util.logging.Logger;
