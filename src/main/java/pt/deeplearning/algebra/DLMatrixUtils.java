@@ -161,4 +161,31 @@ public class DLMatrixUtils {
         return 0.0;
 
     }
+
+    /**
+     * Compute the scalar product (or dot product) of two vectors.
+     *
+     * @param v1
+     * @param v2
+     * @return double the scalar product of the receiver with the argument
+     */
+    public static double product(final DLVector v1, final DLVector v2) {
+        int n = v2.dimension();
+        if (v1.dimension() != n) {
+            throw new IllegalArgumentException("Dimension of Vector v2 does not match.");
+        }
+        return secureProduct(v1, v2);
+    }
+
+    /**
+     * @param v1
+     * @return double o produto interno entre dois vectores
+     */
+    private static double secureProduct(final DLVector v1, final DLVector v2) {
+        double sum = 0;
+        for (int i = 0; i < v2.dimension(); i++) {
+            sum += v1.components[i] * v2.components[i];
+        }
+        return sum;
+    }
 }

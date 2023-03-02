@@ -1,5 +1,6 @@
 package pt.deeplearning;
 
+import pt.deeplearning.algebra.DLMatrixUtils;
 import pt.deeplearning.algebra.DLVector;
 
 public class SingleNeuron {
@@ -13,7 +14,7 @@ public class SingleNeuron {
     }
 
     public double output(){
-        return inputs.product(weights) + bias;
+        return DLMatrixUtils.product(inputs, weights) + bias;
     }
 
     public DLVector getInputs() {
