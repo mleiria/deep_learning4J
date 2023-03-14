@@ -1,10 +1,11 @@
 package pt.deeplearning.algebra;
 
-import org.junit.Test;
+
+import org.junit.jupiter.api.Test;
 
 import java.util.logging.Logger;
 
-import static org.junit.Assert.*;
+import static org.junit.jupiter.api.Assertions.*;
 
 
 class DLMatrixTest {
@@ -70,9 +71,75 @@ class DLMatrixTest {
         assertTrue(b.equals(c));
     }
 
+
     @Test
-    void testEquals() {
+    void ifTheMatrixAreEqualsThenTrue(){
+        final double[][] componentsA = new double[2][2];
+        // linha 0, coluna 0
+        componentsA[0][0] = 1.0;
+        // linha 0, coluna 1
+        componentsA[0][1] = 2.0;
+        // linha 1, coluna 0
+        componentsA[1][0] = 3.0;
+        // linha 1, coluna 1
+        componentsA[1][1] = 4.0;
+        final DLMatrix matrixA = new DLMatrix(componentsA);
+        // Vamos fazer print para ver o aspecto:
+        LOG.info("Matrix A: \n" + matrixA);
+
+        final double[][] componentsB = new double[2][2];
+        // linha 0, coluna 0
+        componentsB[0][0] = 1.0;
+        // linha 0, coluna 1
+        componentsB[0][1] = 2.0;
+        // linha 1, coluna 0
+        componentsB[1][0] = 3.0;
+        // linha 1, coluna 1
+        componentsB[1][1] = 4.0;
+        final DLMatrix matrixB = new DLMatrix(componentsA);
+        // Vamos fazer print para ver o aspecto:
+        LOG.info("Matrix B: \n" + matrixB);
+
+        final boolean isEquals = DLMatrixUtils.equals(matrixA, matrixB);
+
+        //Deverá dar true visto que as matrizes são iguais
+        assertTrue(isEquals);
     }
+
+    @Test
+    void ifTheMatrixAreNotEqualsThenFalse(){
+        final double[][] componentsA = new double[2][2];
+        // linha 0, coluna 0
+        componentsA[0][0] = 1.0;
+        // linha 0, coluna 1
+        componentsA[0][1] = 2.0;
+        // linha 1, coluna 0
+        componentsA[1][0] = 56.0;
+        // linha 1, coluna 1
+        componentsA[1][1] = 4.0;
+        final DLMatrix matrixA = new DLMatrix(componentsA);
+        // Vamos fazer print para ver o aspecto:
+        LOG.info("Matrix A: \n" + matrixA);
+
+        final double[][] componentsB = new double[2][2];
+        // linha 0, coluna 0
+        componentsB[0][0] = 1.0;
+        // linha 0, coluna 1
+        componentsB[0][1] = 2.0;
+        // linha 1, coluna 0
+        componentsB[1][0] = 3.0;
+        // linha 1, coluna 1
+        componentsB[1][1] = 4.0;
+        final DLMatrix matrixB = new DLMatrix(componentsB);
+        // Vamos fazer print para ver o aspecto:
+        LOG.info("Matrix B: \n" + matrixB);
+
+        final boolean isEquals = DLMatrixUtils.equals(matrixA, matrixB);
+
+        //Deverá dar false visto que as matrizes são diferentes
+        assertFalse(isEquals);
+    }
+
 
     @Test
     void add() {

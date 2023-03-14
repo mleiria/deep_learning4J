@@ -28,14 +28,29 @@ public class DLMatrixUtils {
     }
 
     /**
+     *
      * @param matrixA
      * @param matrixB
-     * @return true se as duas matrizes forem iguais
+     * @return true se as matrizes forem iguais (o mesmo número de linhas, o mesmo número de colunas e
+     * os valores das células são iguais)
      */
-    public static boolean equals(final DLMatrix matrixA, final DLMatrix matrixB) {
-
-        //TODO Implementar
-        return false;
+    public static boolean equals(final DLMatrix matrixA, final DLMatrix matrixB){
+        if(matrixA.rows() != matrixB.rows()){
+            return false;
+        }
+        if(matrixA.columns() != matrixB.columns()){
+            return false;
+        }
+        // For all rows
+        for(int i = 0; i < matrixA.rows(); i++){
+           // For all columns
+           for(int j = 0; j < matrixA.columns(); j++){
+               if(matrixA.component(i, j) != matrixB.component(i, j)){
+                   return false;
+               }
+           }
+        }
+        return true;
     }
 
     /**
