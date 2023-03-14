@@ -1,10 +1,11 @@
 package pt.deeplearning.algebra;
 
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 
 import java.util.logging.Logger;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.Assert.*;
+
 
 class DLMatrixTest {
     private static final Logger LOG = Logger.getLogger(DLMatrix.class.getName());

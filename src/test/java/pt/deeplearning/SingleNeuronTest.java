@@ -1,11 +1,11 @@
 package pt.deeplearning;
 
-import org.junit.jupiter.api.Test;
 import pt.deeplearning.algebra.DLVector;
 
 import java.util.logging.Logger;
+import org.junit.Test;
+import static org.junit.Assert.*;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class SingleNeuronTest {
 

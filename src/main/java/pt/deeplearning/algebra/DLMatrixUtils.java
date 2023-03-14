@@ -106,7 +106,7 @@ public class DLMatrixUtils {
      * @param cols
      * @return Uma Matrix of 1.0
      */
-    public static DLMatrix Ones(final int rows, final int cols) {
+    public static DLMatrix ones(final int rows, final int cols) {
         final double[][] components = new double[rows][cols];
         // for each row
         for (int i = 0; i < rows; i++) {
@@ -174,14 +174,6 @@ public class DLMatrixUtils {
         if (v1.dimension() != n) {
             throw new IllegalArgumentException("Dimension of Vector v2 does not match.");
         }
-        return secureProduct(v1, v2);
-    }
-
-    /**
-     * @param v1
-     * @return double o produto interno entre dois vectores
-     */
-    private static double secureProduct(final DLVector v1, final DLVector v2) {
         double sum = 0;
         for (int i = 0; i < v2.dimension(); i++) {
             sum += v1.components[i] * v2.components[i];
