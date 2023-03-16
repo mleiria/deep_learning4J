@@ -8,7 +8,7 @@ public class DLMatrix {
     protected final double[][] components;
 
     /**
-     * Cria uma matriz a partir do arrau de doubles
+     * Cria uma matriz a partir do array de doubles
      *
      * @param components
      */

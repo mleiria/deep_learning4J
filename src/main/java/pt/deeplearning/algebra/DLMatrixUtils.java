@@ -13,7 +13,7 @@ public class DLMatrixUtils {
     }
 
     /**
-     * @return Matrix ttransposta
+     * @return Matrix transposta
      */
     public static DLMatrix transpose(final DLMatrix matrix) {
         int n = matrix.rows();
@@ -54,14 +54,37 @@ public class DLMatrixUtils {
     }
 
     /**
+     * //TODO exception matrixA.rows() != matrixB.rows()
+     * //TODO exception matrixA.columns() != matrixB.columns()
      * @param matrixA
      * @param matrixB
      * @return a soma das duas matrizes
      */
     public static DLMatrix add(final DLMatrix matrixA, final DLMatrix matrixB) {
+        // exception para matrixA.rows() != matrixB.rows()
+        //            && matrixA.columns() != matrixB.columns()
 
-        //TODO Implementar
-        return null;
+        double [][] matrixAdd;
+
+        if (matrixA.rows() == matrixB.rows() && matrixA.columns() == matrixB.columns()) {
+
+            int n = matrixA.rows();
+            int m = matrixA.columns();
+
+            matrixAdd = new double[n][m];
+
+            // for all rows
+            for (int i = 0; i < n; i++) {
+                // for all columns
+                for (int j = 0; j < m; j++) {
+                    matrixAdd[i][j] = matrixA.component(i, j) + matrixB.component(i, j);
+                }
+            }
+        }else {
+            matrixAdd = new double[0][0];
+        }
+
+        return new DLMatrix(matrixAdd);
     }
 
     /**

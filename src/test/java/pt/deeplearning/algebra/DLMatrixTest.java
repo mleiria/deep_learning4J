@@ -96,7 +96,7 @@ class DLMatrixTest {
         componentsB[1][0] = 3.0;
         // linha 1, coluna 1
         componentsB[1][1] = 4.0;
-        final DLMatrix matrixB = new DLMatrix(componentsA);
+        final DLMatrix matrixB = new DLMatrix(componentsB);
         // Vamos fazer print para ver o aspecto:
         LOG.info("Matrix B: \n" + matrixB);
 
@@ -142,7 +142,46 @@ class DLMatrixTest {
 
 
     @Test
+    /*
+      Neste teste fiz a soma de duas matrizes 2 por 2,
+      Eu criei uma terceira matriz (matrixC) que é a resposta
+      correta da soma e comparei (.equals que foi feito pelo manuel)
+      com a matriz da soma.
+     */
     void add() {
+
+        final double[][] componentsA = new double[2][2];
+        componentsA[0][0] = 0.0;
+        componentsA[0][1] = 1.0;
+        componentsA[1][0] = 2.0;
+        componentsA[1][1] = 3.0;
+        final DLMatrix matrixA = new DLMatrix(componentsA);
+        LOG.info("Matrix A: \n" + matrixA);
+
+        final double[][] componentsB = new double[2][2];
+        componentsB[0][0] = 1.0;
+        componentsB[0][1] = 2.0;
+        componentsB[1][0] = 3.0;
+        componentsB[1][1] = 3.0;
+        final DLMatrix matrixB = new DLMatrix(componentsB);
+        LOG.info("Matrix B: \n" + matrixB);
+
+        final double[][] componentsC = new double[2][2];
+        componentsC[0][0] = 1.0;
+        componentsC[0][1] = 3.0;
+        componentsC[1][0] = 5.0;
+        componentsC[1][1] = 6.0;
+        final DLMatrix matrixC = new DLMatrix(componentsC);
+        // Vamos fazer print para ver o aspecto:
+        LOG.info("Matrix C: \n" + matrixC);
+
+        final DLMatrix matrixAdd = DLMatrixUtils.add(matrixA, matrixB);
+
+        final boolean isEquals = DLMatrixUtils.equals(matrixAdd, matrixC);
+
+        // Devera dar true visto que sao iguais
+        assertTrue(isEquals);
+
     }
 
     @Test
