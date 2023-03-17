@@ -91,5 +91,9 @@ public class DLMatrix {
         return sb.toString();
     }
 
+    public boolean equals(final DLMatrix anotherMatrix){
+        return DLMatrixUtils.equals(this, anotherMatrix);
+    }
+
 
 }
