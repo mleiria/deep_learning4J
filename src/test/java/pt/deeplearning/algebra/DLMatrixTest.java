@@ -75,7 +75,7 @@ class DLMatrixTest {
 
 
     @Test
-    void ifTheMatrixAreEqualsThenTrue(){
+    void ifTheMatrixAreEqualsThenTrue() {
         final double[][] componentsA = new double[2][2];
         // linha 0, coluna 0
         componentsA[0][0] = 1.0;
@@ -108,9 +108,9 @@ class DLMatrixTest {
         assertTrue(isEquals);
     }
 
-    @Test                                                                                       
-    void ifTheMatrixAreNotEqualsThenFalse(){
-        final double[][] componentsA = new double[2][2];                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+    @Test
+    void ifTheMatrixAreNotEqualsThenFalse() {
+        final double[][] componentsA = new double[2][2];
         // linha 0, coluna 0
         componentsA[0][0] = 1.0;
         // linha 0, coluna 1
@@ -121,7 +121,7 @@ class DLMatrixTest {
         componentsA[1][1] = 4.0;
         final DLMatrix matrixA = new DLMatrix(componentsA);
         // Vamos fazer print para ver o aspecto:                        
-                                                                                                                                                                                                                                                                                                                                    LOG.info("Matrix A: \n" + matrixA);
+        LOG.info("Matrix A: \n" + matrixA);
 
         final double[][] componentsB = new double[2][2];
         // linha 0, coluna 0
@@ -187,6 +187,32 @@ class DLMatrixTest {
     }
 
     @Test
+    void addWithDifferentDimensions() {
+        try {
+
+            final double[][] componentsA = new double[2][2];
+            componentsA[0][0] = 0.0;
+            componentsA[0][1] = 1.0;
+            componentsA[1][0] = 2.0;
+            componentsA[1][1] = 3.0;
+            final DLMatrix matrixA = new DLMatrix(componentsA);
+            LOG.info("Matrix A: \n" + matrixA);
+
+            final double[][] componentsB = new double[2][1];
+            componentsB[0][0] = 1.0;
+            componentsB[1][0] = 2.0;
+            final DLMatrix matrixB = new DLMatrix(componentsB);
+            LOG.info("Matrix B: \n" + matrixB);
+
+            DLMatrixUtils.add(matrixA, matrixB);
+            fail();
+
+        } catch (IllegalArgumentException e) {
+            LOG.info("Error: " + e.getMessage());
+        }
+    }
+
+    @Test
     void subtract() {
     }
 
@@ -232,11 +258,10 @@ class DLMatrixTest {
             assertEquals(452.0, result.component(1, 1));
             assertEquals(682.0, result.component(2, 0));
             assertEquals(724.0, result.component(2, 1));
-        }catch (Exception e){
+        } catch (Exception e) {
             LOG.severe(e.getMessage());
             fail();
         }
-
 
 
     }

@@ -28,27 +28,26 @@ public class DLMatrixUtils {
     }
 
     /**
-     *
      * @param matrixA
      * @param matrixB
      * @return true se as matrizes forem iguais (o mesmo número de linhas, o mesmo número de colunas e
      * os valores das células são iguais)
      */
-    public static boolean equals(final DLMatrix matrixA, final DLMatrix matrixB){
-        if(matrixA.rows() != matrixB.rows()){
+    public static boolean equals(final DLMatrix matrixA, final DLMatrix matrixB) {
+        if (matrixA.rows() != matrixB.rows()) {
             return false;
         }
-        if(matrixA.columns() != matrixB.columns()){
+        if (matrixA.columns() != matrixB.columns()) {
             return false;
         }
         // For all rows
-        for(int i = 0; i < matrixA.rows(); i++){
-           // For all columns
-           for(int j = 0; j < matrixA.columns(); j++){
-               if(matrixA.component(i, j) != matrixB.component(i, j)){
-                   return false;
-               }
-           }
+        for (int i = 0; i < matrixA.rows(); i++) {
+            // For all columns
+            for (int j = 0; j < matrixA.columns(); j++) {
+                if (matrixA.component(i, j) != matrixB.component(i, j)) {
+                    return false;
+                }
+            }
         }
         return true;
     }
@@ -56,39 +55,39 @@ public class DLMatrixUtils {
     /**
      * //TODO exception matrixA.rows() != matrixB.rows()
      * //TODO exception matrixA.columns() != matrixB.columns()
+     *
      * @param matrixA
      * @param matrixB
      * @return a soma das duas matrizes
      */
     public static DLMatrix add(final DLMatrix matrixA, final DLMatrix matrixB) {
-        // exception para matrixA.rows() != matrixB.rows()
-        //            && matrixA.columns() != matrixB.columns()
 
-        double [][] matrixAdd;
-
-        if (matrixA.rows() == matrixB.rows() && matrixA.columns() == matrixB.columns()) {
-
-            int n = matrixA.rows();
-            int m = matrixA.columns();
-
-            matrixAdd = new double[n][m];
-
-            // for all rows
-            for (int i = 0; i < n; i++) {
-                // for all columns
-                for (int j = 0; j < m; j++) {
-                    matrixAdd[i][j] = matrixA.component(i, j) + matrixB.component(i, j);
-                }
-            }
-        }else {
-            matrixAdd = new double[0][0];
+        if (matrixA.rows() != matrixB.rows()) {
+            throw new IllegalArgumentException("Rows must have the same size");
         }
+        if (matrixA.columns() != matrixB.columns()) {
+            throw new IllegalArgumentException("Columns must have the same size");
+        }
+        double[][] matrixAdd;
 
+        int n = matrixA.rows();
+        int m = matrixA.columns();
+
+        matrixAdd = new double[n][m];
+
+        // for all rows
+        for (int i = 0; i < n; i++) {
+            // for all columns
+            for (int j = 0; j < m; j++) {
+                matrixAdd[i][j] = matrixA.component(i, j) + matrixB.component(i, j);
+            }
+        }
         return new DLMatrix(matrixAdd);
     }
 
     /**
      * Adiciona o value a todos os elementos da matriz
+     *
      * @param matrixA
      * @param value
      * @return a soma da matriz pelo elemento value
@@ -112,8 +111,9 @@ public class DLMatrixUtils {
 
     /**
      * Multiplica cada elemento da matriz pelo valor
+     *
      * @param matrix
-     * @param value o valor para multiplicr
+     * @param value  o valor para multiplicr
      * @return A matriz multiplicada por um escalar
      */
     public DLMatrix multiply(final DLMatrix matrix, final double value) {
@@ -139,7 +139,6 @@ public class DLMatrixUtils {
 
 
     /**
-     *
      * @param rows
      * @param cols
      * @return Uma Matrix of 1.0
@@ -177,7 +176,6 @@ public class DLMatrixUtils {
     }
 
     /**
-     *
      * @param rows
      * @param cols
      * @return Uma matriz Identidade
@@ -190,10 +188,11 @@ public class DLMatrixUtils {
 
     /**
      * Operador trace.
+     *
      * @param matrix
      * @return A soma dos elementos da diagonal principal
      */
-    public static double trace(final DLMatrix matrix){
+    public static double trace(final DLMatrix matrix) {
 
         //TODO Implementar
         return 0.0;
