@@ -91,7 +91,15 @@ public class DLMatrix {
         return sb.toString();
     }
 
-    public boolean equals(final DLMatrix anotherMatrix){
+    /**
+     *
+     * @return an int[] where int[0] = num rows and int[1] = num columns
+     */
+    public int[] shape() {
+        return new int[]{this.rows(), this.columns()};
+    }
+
+    public boolean equals(final DLMatrix anotherMatrix) {
         return DLMatrixUtils.equals(this, anotherMatrix);
     }
 

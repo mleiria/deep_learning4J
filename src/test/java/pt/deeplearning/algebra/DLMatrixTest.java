@@ -1,16 +1,15 @@
 package pt.deeplearning.algebra;
 
 
-import jdk.nashorn.internal.ir.annotations.Ignore;
 import org.junit.jupiter.api.Test;
-
+import pt.mleiria.StopWatch;
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 
 class DLMatrixTest {
-    private static final Logger LOG = Logger.getLogger(DLMatrix.class.getName());
+    private static final Logger LOG = Logger.getLogger(DLMatrixTest.class.getName());
 
     @Test
     void rows() {
@@ -216,7 +215,7 @@ class DLMatrixTest {
     void subtract() {
     }
 
-    @Ignore
+    @Test
     void multiply() {
         try {
             final double[][] componentsMatrixA = new double[3][4];
@@ -247,7 +246,7 @@ class DLMatrixTest {
             final DLMatrix matrixB = new DLMatrix(componentsMatrixB);
             LOG.info("Matrix b: \n" + matrixB.toString());
 
-            final DLMatrix result = DLMatrixUtils.multiply(matrixA, matrixB);
+            final DLMatrix result = DLMatrixUtils.mul(matrixA, matrixB);
             LOG.info("Matrix result: \n" + result.toString());
             assertEquals(3, result.rows());
             assertEquals(2, result.columns());
@@ -269,4 +268,120 @@ class DLMatrixTest {
     @Test
     void testMultiply() {
     }
+
+    @Test
+    void testSquare(){
+        final double[][] componentsMatrixA = new double[2][2];
+        componentsMatrixA[0][0] = 2.0;
+        componentsMatrixA[0][1] = 2.0;
+        componentsMatrixA[1][0] = 2.0;
+        componentsMatrixA[1][1] = 2.0;
+
+        final double[][] componentsMatrixB = new double[2][2];
+        componentsMatrixB[0][0] = 4.0;
+        componentsMatrixB[0][1] = 4.0;
+        componentsMatrixB[1][0] = 4.0;
+        componentsMatrixB[1][1] = 4.0;
+
+        DLMatrix res = DLMatrixUtils.square(new DLMatrix(componentsMatrixA));
+        LOG.info("Matrix : \n" + res);
+        assertTrue(DLMatrixUtils.square(new DLMatrix(componentsMatrixA)).equals(new DLMatrix(componentsMatrixB)));
+
+    }
+
+
+    @Test
+    void complexTest(){
+        final double[][] componentsMatrixR = new double[2][2];
+        componentsMatrixR[0][0] = -2.0;
+        componentsMatrixR[0][1] = 0.0;
+        componentsMatrixR[1][0] = 0.0;
+        componentsMatrixR[1][1] = 2.0;
+        final DLMatrix matrixR = new DLMatrix(componentsMatrixR);
+        LOG.info("Matrix R: \n" + matrixR);
+
+        final double[][] componentsMatrixX = new double[1][2];
+        componentsMatrixX[0][0] = 1.0;
+        componentsMatrixX[0][1] = 1.0;
+        final DLMatrix matrixX = new DLMatrix(componentsMatrixX);
+        LOG.info("Matrix X: \n" + matrixX);
+        final DLMatrix matrixXTranspose = DLMatrixUtils.transpose(matrixX);
+        LOG.info("Matrix X transpose: \n" + matrixXTranspose);
+
+        final DLMatrix y = DLMatrixUtils.mul(matrixR, matrixXTranspose);
+
+        LOG.info("Matrix y: \n" + y);
+        assertNotNull(y);
+
+    }
+    @Test
+    void complexTest1() {
+        final double[][] componentsMatrixR = new double[2][2];
+        componentsMatrixR[0][0] = -2.0;
+        componentsMatrixR[0][1] = 0.0;
+        componentsMatrixR[1][0] = 0.0;
+        componentsMatrixR[1][1] = 2.0;
+        final DLMatrix matrixR = new DLMatrix(componentsMatrixR);
+        LOG.info("Matrix R: \n" + matrixR);
+
+    }
+    @Test
+    void ones() {
+        final DLMatrix matrixR = DLMatrixUtils.ones(2, 2);
+        for(int i = 0; i < matrixR.rows(); i++){
+            for(int j = 0; j < matrixR.columns(); j++){
+                assertTrue(matrixR.component(i, j) == 1.0);
+            }
+        }
+        LOG.info("Matrix R: \n" + matrixR);
+    }
+
+    @Test
+    void matrixMultiply(){
+        double[][] matrix1 = {
+                {1.0, 2.0},
+                {3.0, 4.0},
+                {5.0, 6.0}
+        };
+
+        double[][] matrix2 = {
+                {7.0, 8.0, 9.0},
+                {10.0, 11.0, 12.0}
+        };
+        //Using vector API
+        DLMatrix matrixRes = DLMatrixUtils.matrixMultiply(new DLMatrix(matrix1), new DLMatrix(matrix2));
+        //Old skool
+        DLMatrix matrixRes1 = DLMatrixUtils.mul(new DLMatrix(matrix1), new DLMatrix(matrix2));
+
+        System.out.println(matrixRes);
+        System.out.println();
+        System.out.println(matrixRes1);
+        assertTrue(matrixRes.equals(matrixRes1));
+    }
+
+    @Test
+    void matrixMultiplyPerformance(){
+        final int start = 1000;
+        final int end = 100000;
+        for(int i = start; i < end; i = i + 1000){
+            final DLMatrix matrix1 = DLMatrixUtils.rand(i, i);
+            final DLMatrix matrix2 = DLMatrixUtils.rand(i, i);
+            final StopWatch sw = new StopWatch();
+            final DLMatrix matrixRes = DLMatrixUtils.matrixMultiply(matrix1, matrix2);
+            System.out.println(sw.elapsedTime());
+            //System.out.println(matrixRes);
+
+            final StopWatch sw1 = new StopWatch();
+            final DLMatrix matrixRes1 = DLMatrixUtils.mul(matrix1, matrix2);
+            System.out.println(sw1.elapsedTime());
+            //System.out.println(matrixRes1);
+
+        }
+
+/*
+        assertTrue(matrixRes.rows() == matrixRes1.rows());
+        assertTrue(matrixRes.columns() == matrixRes1.columns());
+*/
+    }
+
 }

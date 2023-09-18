@@ -1,5 +1,12 @@
 package pt.deeplearning.algebra;
 
+import jdk.incubator.vector.DoubleVector;
+import jdk.incubator.vector.VectorSpecies;
+
+import java.util.function.BiFunction;
+import java.util.function.BiPredicate;
+import java.util.function.Function;
+
 import static java.lang.Math.random;
 
 public class DLMatrixUtils {
@@ -68,21 +75,11 @@ public class DLMatrixUtils {
         if (matrixA.columns() != matrixB.columns()) {
             throw new IllegalArgumentException("Columns must have the same size");
         }
-        double[][] matrixAdd;
-
         int n = matrixA.rows();
         int m = matrixA.columns();
 
-        matrixAdd = new double[n][m];
+        return engine(n, m, matrixA, matrixB, (x, y) -> x + y);
 
-        // for all rows
-        for (int i = 0; i < n; i++) {
-            // for all columns
-            for (int j = 0; j < m; j++) {
-                matrixAdd[i][j] = matrixA.component(i, j) + matrixB.component(i, j);
-            }
-        }
-        return new DLMatrix(matrixAdd);
     }
 
     /**
@@ -92,10 +89,12 @@ public class DLMatrixUtils {
      * @param value
      * @return a soma da matriz pelo elemento value
      */
-    public static DLMatrix add(final DLMatrix matrixA, final double value) {
+    public static DLMatrix add(final DLMatrix matrixA, final Double value) {
 
-        //TODO Implementar
-        return null;
+        int n = matrixA.rows();
+        int m = matrixA.columns();
+
+        return engine(n, m, matrixA, value, (x, y) -> x + y);
     }
 
     /**
@@ -105,8 +104,16 @@ public class DLMatrixUtils {
      */
     public DLMatrix subtract(final DLMatrix matrixA, final DLMatrix matrixB) {
 
-        //TODO Implementar. Nota: podemos reaproveitar o método add para fazer o subtract
-        return null;
+        if (matrixA.rows() != matrixB.rows()) {
+            throw new IllegalArgumentException("Rows must have the same size");
+        }
+        if (matrixA.columns() != matrixB.columns()) {
+            throw new IllegalArgumentException("Columns must have the same size");
+        }
+        int n = matrixA.rows();
+        int m = matrixA.columns();
+
+        return engine(n, m, matrixA, matrixB, (x, y) -> x - y);
     }
 
     /**
@@ -116,27 +123,19 @@ public class DLMatrixUtils {
      * @param value  o valor para multiplicr
      * @return A matriz multiplicada por um escalar
      */
-    public DLMatrix multiply(final DLMatrix matrix, final double value) {
-
-        //TODO Implementar
-        return null;
+    public static DLMatrix multiply(final DLMatrix matrix, final Double value) {
+        int n = matrix.rows();
+        int m = matrix.columns();
+        return engine(n, m, matrix, value, (x, y) -> x * y);
     }
 
     /**
-     * @param matrixA
-     * @param matrixB
-     * @return O produto das duas matrizes
-     * @throws IllegalArgumentException se o número de colunas desta matriz for diferente
-     *                                  do número de linhas da matriz recebida
+     * @param matrix
+     * @return Uma Matrix with the values sqared
      */
-    public static DLMatrix multiply(final DLMatrix matrixA, final DLMatrix matrixB) {
-        if (matrixA.columns() != matrixB.rows()) {
-            throw new IllegalArgumentException("Illegal size.");
-        }
-        //TODO Implementar
-        return null;
+    public static DLMatrix square(final DLMatrix matrix) {
+        return engine(matrix, x -> Math.pow(x, 2));
     }
-
 
     /**
      * @param rows
@@ -144,15 +143,7 @@ public class DLMatrixUtils {
      * @return Uma Matrix of 1.0
      */
     public static DLMatrix ones(final int rows, final int cols) {
-        final double[][] components = new double[rows][cols];
-        // for each row
-        for (int i = 0; i < rows; i++) {
-            // for each column
-            for (int j = 0; j < cols; j++) {
-                components[i][j] = 1.0;
-            }
-        }
-        return new DLMatrix(components);
+        return engine(rows, cols, x -> 1.0);
     }
 
     /**
@@ -164,15 +155,7 @@ public class DLMatrixUtils {
      * @return Matrix
      */
     public static DLMatrix rand(final int rows, final int cols) {
-        final double[][] components = new double[rows][cols];
-        // for each row
-        for (int i = 0; i < rows; i++) {
-            // for each column
-            for (int j = 0; j < cols; j++) {
-                components[i][j] = random();
-            }
-        }
-        return new DLMatrix(components);
+        return engine(rows, cols, x -> random());
     }
 
     /**
@@ -181,9 +164,7 @@ public class DLMatrixUtils {
      * @return Uma matriz Identidade
      */
     public static DLMatrix identity(final int rows, final int cols) {
-
-        //TODO Implementar
-        return null;
+        return engine(rows, cols, x -> 1.0, (i, j) -> i == j);
     }
 
     /**
@@ -217,4 +198,123 @@ public class DLMatrixUtils {
         }
         return sum;
     }
+
+    private static final VectorSpecies<Double> DOUBLE_VECTOR_SPECIES = DoubleVector.SPECIES_PREFERRED;
+
+    public static double[] addTwoVectorsWithMasks(double[] arr1, double[] arr2) {
+        double[] finalResult = new double[arr1.length];
+        int i = 0;
+        for (; i < DOUBLE_VECTOR_SPECIES.loopBound(arr1.length); i += DOUBLE_VECTOR_SPECIES.length()) {
+            var mask = DOUBLE_VECTOR_SPECIES.indexInRange(i, arr1.length);
+            var v1 = DoubleVector.fromArray(DOUBLE_VECTOR_SPECIES, arr1, i, mask);
+            var v2 = DoubleVector.fromArray(DOUBLE_VECTOR_SPECIES, arr2, i, mask);
+            var result = v1.add(v2, mask);
+            result.intoArray(finalResult, i, mask);
+        }
+
+        // tail cleanup loop
+        for (; i < arr1.length; i++) {
+            finalResult[i] = arr1[i] + arr2[i];
+        }
+        return finalResult;
+    }
+
+    /**
+     * Nº cols = Nº linhas
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public static DLMatrix mul(final DLMatrix a, final DLMatrix b) {
+        int p = a.components[0].length; //cols
+        int n = a.components.length; //rows
+        int m = b.components[0].length; //cols
+
+        if (p != b.components.length) {
+            throw new IllegalArgumentException("Matrix mismatch! " +
+                    p + " != " + b.components.length);
+        }
+        final double[][] res = new double[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                double sum = 0.0;
+                for (int k = 0; k < p; k++) {
+                    sum += a.components[i][k] * b.components[k][j];
+                    res[i][j] = sum;
+                }
+            }
+        }
+        return new DLMatrix(res);
+    }
+
+    private static DLMatrix engine(int rows, int cols, Function<Double, Double> f, BiPredicate<Integer, Integer> p) {
+        final double[][] components = new double[rows][cols];
+        // for each row
+        for (int i = 0; i < rows; i++) {
+            // for each column
+            for (int j = 0; j < cols; j++) {
+                if (p.test(i, j)) {
+                    components[i][j] = f.apply(components[i][j]);
+                }
+            }
+        }
+        return new DLMatrix(components);
+    }
+
+    private static DLMatrix engine(final DLMatrix matrix, Function<Double, Double> f) {
+        final double[][] components = new double[matrix.rows()][matrix.columns()];
+        // for each row
+        for (int i = 0; i < matrix.rows(); i++) {
+            // for each column
+            for (int j = 0; j < matrix.columns(); j++) {
+                components[i][j] = f.apply(matrix.components[i][j]);
+            }
+        }
+        return new DLMatrix(components);
+    }
+
+    private static DLMatrix engine(final int rows, final int cols,
+                                   final DLMatrix matrixA, final Double value,
+                                   BiFunction<Double, Double, Double> oper) {
+
+        final double[][] components = new double[rows][cols];
+        // for each row
+        for (int i = 0; i < rows; i++) {
+            // for each column
+            for (int j = 0; j < cols; j++) {
+                components[i][j] = oper.apply(matrixA.component(i, j), value);
+            }
+        }
+        return new DLMatrix(components);
+    }
+
+    private static DLMatrix engine(final int rows, final int cols,
+                                   final DLMatrix matrixA, final DLMatrix matrixB,
+                                   BiFunction<Double, Double, Double> oper) {
+
+        final double[][] components = new double[rows][cols];
+        // for each row
+        for (int i = 0; i < rows; i++) {
+            // for each column
+            for (int j = 0; j < cols; j++) {
+                components[i][j] = oper.apply(matrixA.component(i, j), matrixB.component(i, j));
+            }
+        }
+        return new DLMatrix(components);
+    }
+
+    private static DLMatrix engine(final int rows, final int cols, Function<Double, Double> f) {
+        final double[][] components = new double[rows][cols];
+        // for each row
+        for (int i = 0; i < rows; i++) {
+            // for each column
+            for (int j = 0; j < cols; j++) {
+                components[i][j] = f.apply(components[i][j]);
+            }
+        }
+        return new DLMatrix(components);
+    }
+
+
 }
