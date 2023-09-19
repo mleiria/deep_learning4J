@@ -1,7 +1,5 @@
 package pt.deeplearning;
 
-import pt.deeplearning.algebra.DLVector;
-
 import java.util.logging.Logger;
 
 /**
