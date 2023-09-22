@@ -8,6 +8,13 @@ public class DLVector {
         this.components = components;
     }
 
+    public DLVector(final int dimension) {
+        if (dimension <= 0) {
+            throw new IllegalArgumentException("Illegal vector size.");
+        }
+        this.components = new double[dimension];
+    }
+
     /**
      * @return int, a dimensão do vector
      */
@@ -15,6 +22,14 @@ public class DLVector {
         return components.length;
     }
 
+    /**
+     *
+     * @param n the index of the coponent to retreive
+     * @return the value on that index
+     */
+    public double component(final int n){
+        return components[n];
+    }
     /**
      * Represetnação em String do DLVector
      *

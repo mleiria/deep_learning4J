@@ -10,8 +10,10 @@ import static java.lang.Math.random;
 
 public class DLMatrixUtils {
 
-    private DLMatrixUtils(){}
+    private DLMatrixUtils() {
+    }
 
+    // Start Matrix Operations
 
     /**
      * @return true se a matriz for quadrada
@@ -180,6 +182,38 @@ public class DLMatrixUtils {
     }
 
     /**
+     * Nº cols = Nº linhas
+     *
+     * @param a
+     * @param b
+     * @return
+     */
+    public static DLMatrix mul(final DLMatrix a, final DLMatrix b) {
+        int p = a.components[0].length; //cols
+        int n = a.components.length; //rows
+        int m = b.components[0].length; //cols
+
+        if (p != b.components.length) {
+            throw new IllegalArgumentException("Matrix mismatch! " +
+                    p + " != " + b.components.length);
+        }
+        final double[][] res = new double[n][m];
+        for (int i = 0; i < n; i++) {
+            for (int j = 0; j < m; j++) {
+                double sum = 0.0;
+                for (int k = 0; k < p; k++) {
+                    sum += a.components[i][k] * b.components[k][j];
+                    res[i][j] = sum;
+                }
+            }
+        }
+        return new DLMatrix(res);
+    }
+
+    // Vector Operations
+
+
+    /**
      * Compute the scalar product (or dot product) of two vectors.
      *
      * @param v1
@@ -218,35 +252,8 @@ public class DLMatrixUtils {
         return finalResult;
     }
 
-    /**
-     * Nº cols = Nº linhas
-     *
-     * @param a
-     * @param b
-     * @return
-     */
-    public static DLMatrix mul(final DLMatrix a, final DLMatrix b) {
-        int p = a.components[0].length; //cols
-        int n = a.components.length; //rows
-        int m = b.components[0].length; //cols
 
-        if (p != b.components.length) {
-            throw new IllegalArgumentException("Matrix mismatch! " +
-                    p + " != " + b.components.length);
-        }
-        final double[][] res = new double[n][m];
-        for (int i = 0; i < n; i++) {
-            for (int j = 0; j < m; j++) {
-                double sum = 0.0;
-                for (int k = 0; k < p; k++) {
-                    sum += a.components[i][k] * b.components[k][j];
-                    res[i][j] = sum;
-                }
-            }
-        }
-        return new DLMatrix(res);
-    }
-
+    // Engines
     private static DLMatrix engine(int rows, int cols, Function<Double, Double> f, BiPredicate<Integer, Integer> p) {
         final double[][] components = new double[rows][cols];
         // for each row

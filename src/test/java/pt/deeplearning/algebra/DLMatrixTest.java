@@ -356,22 +356,19 @@ class DLMatrixTest {
         assertTrue(matrixRes1 != null);
     }
 
+
     @Test
     void matrixMultiplyPerformance(){
         final int start = 1000;
-        final int end = 100000;
+        final int end = 2000;
         for(int i = start; i < end; i = i + 1000){
             final DLMatrix matrix1 = DLMatrixUtils.rand(i, i);
             final DLMatrix matrix2 = DLMatrixUtils.rand(i, i);
             final StopWatch sw = new StopWatch();
-            System.out.println(sw.elapsedTime());
-            //System.out.println(matrixRes);
-
+            System.out.println("Matrix creation:" + sw.elapsedTime());
             final StopWatch sw1 = new StopWatch();
             final DLMatrix matrixRes1 = DLMatrixUtils.mul(matrix1, matrix2);
-            System.out.println(sw1.elapsedTime());
-            //System.out.println(matrixRes1);
-
+            System.out.println("Matrix multiplication:" + sw1.elapsedTime());
         }
 
 /*

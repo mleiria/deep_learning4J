@@ -3,6 +3,9 @@
 ## Regressão Linear
 
 1. Representação do Modelo
+2. Função de Custo
+
+### 1. Representação do Modelo
 
 ### Objectivo:
 
@@ -49,3 +52,53 @@ INFO: Número de exemplos de treino: 2
 
 Vamos usar ($x^{(i)}$, $y^{(i)}$) para referir o exemplo de treino $i$
 
+### A função modelo
+
+![img_1.png](img_1.png)
+
+A função modelo para a regressão linear (que é uma função que mapeia valores de $x$ para $y$) é representada como:
+
+```
+$$ f_{w,b}(x^{(i)}) = wx^{(i)} + b \tag{1}$$
+```
+
+Vamos calcular alguns valores de  $f_{w,b}(x^{(i)})$ para os dois pontos de dados:
+
+Para $x^{(0)}$, `f_wb = w * x[0] + b`
+
+Para $x^{(1)}$, `f_wb = w * x[1] + b`
+
+```
+    /**
+     * 
+     * @param w Parâmetro do modelo
+     * @param b Parâmetro do modelo
+     * @return  Valores alvo
+     */
+    public DLVector computeModelOutput(final double w, final double b){
+        final int m = xTrain.dimension();
+        final double[] f_wb = new double[m];
+        for (int i = 0; i < m; i++) {
+            f_wb[i] = w * xTrain.component(i) + b;
+        }
+        return new DLVector(f_wb);
+    }
+```
+**Nota**: Ver classe **pt.deeplearning.LinearRegression.java**
+
+### Previsão
+
+Agora que temos o modelo, podemos fazer algumas previsões. O mais importante é calcular os valores ideias dos parâmetros $w$ e $b$.
+Por hora suponhamos que já temos bons valores para $w$ e $b$. Então, por exemplo, para prever o preço de uma casa com 1200sqft, temos:
+
+```
+final double xi = 1.2;
+final double w = 200.0;
+final double b = 100.0;
+final double cost1200sqft = w * xi + b;
+LOG.info(String.format("Preço previsto para uma casa de %s sqft: %f", xi*1000, cost1200sqft));
+```
+```
+INFO: Preço previsto para uma casa de 1200.0 sqft: 340,000000
+```
+### 2. Função de Custo
