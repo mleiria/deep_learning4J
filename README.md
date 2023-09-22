@@ -36,7 +36,7 @@ INFO: yTrain: [ 300.0, 500.0]
 ```
 
 #### Número de exemplos de treino
-Se *m* for o número de exemplos de treino, temos:
+Se $m$ for o número de exemplos de treino, temos:
 
 ```
 final int m = xTrain.dimension();
@@ -47,5 +47,5 @@ LOG.info(String.format("Número de exemplos de treino: %d", m));
 INFO: Número de exemplos de treino: 2
 ```
 
-Vamos usar ($x^{(i)}$, $y^{(i)}$) para referir o exemplo de treino $i^{th}$
+Vamos usar ($x^{(i)}$, $y^{(i)}$) para referir o exemplo de treino $i$
 
