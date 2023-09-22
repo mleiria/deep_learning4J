@@ -39,7 +39,7 @@ class SingleNeuronTest {
          * O output desta rede neuronal é:
          */
         final double output = singleNeuron.output();
-        LOG.info("Output da rede: " + output);
+        LOG.info(String.format("Output da rede: %2f", output));
         assertEquals(2.3, output);
     }
 

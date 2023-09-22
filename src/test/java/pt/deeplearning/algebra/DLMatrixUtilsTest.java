@@ -57,4 +57,23 @@ class DLMatrixUtilsTest {
         assertEquals(0.0, matrixB.component(1, 0));
         assertEquals(1.0, matrixB.component(1, 1));
     }
+
+    @Test
+    void trace() {
+        final double trace = DLMatrixUtils.trace(getMatrix());
+        assertEquals(5.0, trace);
+    }
+
+    @Test
+    void subtract() {
+        LOG.info('\n' + getMatrix().toString());
+        final DLMatrix matrixB = DLMatrixUtils.identity(2, 2);
+        LOG.info('\n' + matrixB.toString());
+        final DLMatrix res = DLMatrixUtils.subtract(getMatrix(), matrixB);
+        LOG.info('\n' + res.toString());
+        assertEquals(0.0, res.component(0, 0));
+        assertEquals(2.0, res.component(0, 1));
+        assertEquals(3.0, res.component(1, 0));
+        assertEquals(3.0, res.component(1, 1));
+    }
 }

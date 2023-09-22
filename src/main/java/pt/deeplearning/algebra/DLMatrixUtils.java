@@ -3,13 +3,14 @@ package pt.deeplearning.algebra;
 import jdk.incubator.vector.DoubleVector;
 import jdk.incubator.vector.VectorSpecies;
 
-import java.util.function.BiFunction;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
 
 import static java.lang.Math.random;
 
 public class DLMatrixUtils {
+
+    private DLMatrixUtils(){}
 
 
     /**
@@ -78,7 +79,7 @@ public class DLMatrixUtils {
         int n = matrixA.rows();
         int m = matrixA.columns();
 
-        return engine(n, m, matrixA, matrixB, (x, y) -> x + y);
+        return engine(n, m, matrixA, matrixB, x -> y -> x + y);
 
     }
 
@@ -94,7 +95,7 @@ public class DLMatrixUtils {
         int n = matrixA.rows();
         int m = matrixA.columns();
 
-        return engine(n, m, matrixA, value, (x, y) -> x + y);
+        return engine(n, m, matrixA, value, x -> y -> x + y);
     }
 
     /**
@@ -102,7 +103,7 @@ public class DLMatrixUtils {
      * @param matrixB
      * @return a diferença das duas matrizes
      */
-    public DLMatrix subtract(final DLMatrix matrixA, final DLMatrix matrixB) {
+    public static DLMatrix subtract(final DLMatrix matrixA, final DLMatrix matrixB) {
 
         if (matrixA.rows() != matrixB.rows()) {
             throw new IllegalArgumentException("Rows must have the same size");
@@ -113,7 +114,7 @@ public class DLMatrixUtils {
         int n = matrixA.rows();
         int m = matrixA.columns();
 
-        return engine(n, m, matrixA, matrixB, (x, y) -> x - y);
+        return engine(n, m, matrixA, matrixB, x -> y -> x - y);
     }
 
     /**
@@ -126,7 +127,7 @@ public class DLMatrixUtils {
     public static DLMatrix multiply(final DLMatrix matrix, final Double value) {
         int n = matrix.rows();
         int m = matrix.columns();
-        return engine(n, m, matrix, value, (x, y) -> x * y);
+        return engine(n, m, matrix, value, x -> y -> x * y);
     }
 
     /**
@@ -164,7 +165,7 @@ public class DLMatrixUtils {
      * @return Uma matriz Identidade
      */
     public static DLMatrix identity(final int rows, final int cols) {
-        return engine(rows, cols, x -> 1.0, (i, j) -> i == j);
+        return engine(rows, cols, x -> 1.0, (i, j) -> i.intValue() == j.intValue());
     }
 
     /**
@@ -174,9 +175,7 @@ public class DLMatrixUtils {
      * @return A soma dos elementos da diagonal principal
      */
     public static double trace(final DLMatrix matrix) {
-
-        //TODO Implementar
-        return 0.0;
+        return engine(matrix, x -> x, (i, j) -> i.intValue() == j.intValue());
 
     }
 
@@ -262,6 +261,20 @@ public class DLMatrixUtils {
         return new DLMatrix(components);
     }
 
+    private static double engine(DLMatrix matrix, Function<Double, Double> f, BiPredicate<Integer, Integer> p) {
+        double res = 0.0;
+        // for each row
+        for (int i = 0; i < matrix.rows(); i++) {
+            // for each column
+            for (int j = 0; j < matrix.columns(); j++) {
+                if (p.test(i, j)) {
+                    res += f.apply(matrix.component(i, j));
+                }
+            }
+        }
+        return res;
+    }
+
     private static DLMatrix engine(final DLMatrix matrix, Function<Double, Double> f) {
         final double[][] components = new double[matrix.rows()][matrix.columns()];
         // for each row
@@ -276,14 +289,14 @@ public class DLMatrixUtils {
 
     private static DLMatrix engine(final int rows, final int cols,
                                    final DLMatrix matrixA, final Double value,
-                                   BiFunction<Double, Double, Double> oper) {
+                                   Function<Double, Function<Double, Double>> oper) {
 
         final double[][] components = new double[rows][cols];
         // for each row
         for (int i = 0; i < rows; i++) {
             // for each column
             for (int j = 0; j < cols; j++) {
-                components[i][j] = oper.apply(matrixA.component(i, j), value);
+                components[i][j] = oper.apply(matrixA.component(i, j)).apply(value);
             }
         }
         return new DLMatrix(components);
@@ -291,14 +304,15 @@ public class DLMatrixUtils {
 
     private static DLMatrix engine(final int rows, final int cols,
                                    final DLMatrix matrixA, final DLMatrix matrixB,
-                                   BiFunction<Double, Double, Double> oper) {
+                                   Function<Double, Function<Double, Double>> oper) {
 
         final double[][] components = new double[rows][cols];
         // for each row
         for (int i = 0; i < rows; i++) {
             // for each column
             for (int j = 0; j < cols; j++) {
-                components[i][j] = oper.apply(matrixA.component(i, j), matrixB.component(i, j));
+                //components[i][j] = oper.apply(matrixA.component(i, j), matrixB.component(i, j));
+                components[i][j] = oper.apply(matrixA.component(i, j)).apply(matrixB.component(i, j));
             }
         }
         return new DLMatrix(components);
@@ -315,6 +329,4 @@ public class DLMatrixUtils {
         }
         return new DLMatrix(components);
     }
-
-
 }
