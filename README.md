@@ -71,12 +71,12 @@ Para $x^{(1)}$, `f_wb = w * x[1] + b`
 
 ```
     /**
-     * 
+     * @param xTrain Valores de treino
      * @param w Parâmetro do modelo
      * @param b Parâmetro do modelo
      * @return  Valores alvo
      */
-    public DLVector computeModelOutput(final double w, final double b){
+    public static DLVector computeModelOutput(final DLVector xTrain, final double w, final double b){
         final int m = xTrain.dimension();
         final double[] f_wb = new double[m];
         for (int i = 0; i < m; i++) {
@@ -135,3 +135,38 @@ $$f_{w,b}(x^{(i)}) = wx^{(i)} + b \tag{2}$$
 - $f_{w,b}(x^{(i)})$ é a nossa previsão para o exemplo $i$ usando os parâmetros $w,b$.
 - $(f_{w,b}(x^{(i)}) -y^{(i)})^2$ é o quadrado da diferença entre o valor alvo e a previsão
 - Estas diferenças são somadas sobre todos os  $m$ exemplos e divididos por `2m` para produzir o custo  $J(w,b)$.  
+
+![img_3.png](img_3.png)
+
+O custo calcula-se iterando sobre os exemplos.
+
+- `f_wb`, uma previsão é calculada
+- a diferença entre o valor real e o previsto é calculado e elevado ao quadrado.
+- esse valor é adicionado ao custo total
+A seguinte função calula o custo:
+
+```
+    /**
+     *
+     * @param x Dados. m exemplos
+     * @param y Valores alvo
+     * @param w Parâmetros do modelo
+     * @param b Parâmetros do modelo
+     * @return O custo total. O custo de usar os valores w e b como parâmetros para a regressão
+     * linear 
+     */
+    public static double computeCost(final DLVector x, final DLVector y, final double w, final double b){
+        // Número de exemplos de treino
+        final int m = x.dimension();
+        double costSum = 0.0;
+        for (int i = 0; i < m; i++){
+            final double f_wb = w * x.component(i) + b;
+            final double cost = Math.pow(f_wb - y.component(i), 2);
+            costSum += cost;
+        }
+        final double totalCost = (1.0 / (2.0 * m)) * costSum;
+        return totalCost;
+    }
+
+```
+![img_4.png](img_4.png)

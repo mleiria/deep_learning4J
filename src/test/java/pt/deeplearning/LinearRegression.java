@@ -9,27 +9,14 @@ public class LinearRegression {
 
     private static final Logger LOG = Logger.getLogger(LinearRegression.class.getName());
 
-    /**
-     * xTrain é a variável de entrada
-     */
-    private final DLVector xTrain;
-    /**
-     * yTrain é a variável de saída
-     */
-    private final DLVector yTrain;
-
-    public LinearRegression(final DLVector xTrain, final DLVector yTrain) {
-        this.xTrain = xTrain;
-        this.yTrain = yTrain;
-    }
 
     /**
-     *
-     * @param w Parâmetro do modelo
-     * @param b Parâmetro do modelo
-     * @return  Valores alvo
+     * @param xTrain Valores de treino
+     * @param w      Parâmetro do modelo
+     * @param b      Parâmetro do modelo
+     * @return Valores alvo
      */
-    public DLVector computeModelOutput(final double w, final double b){
+    public static DLVector computeModelOutput(final DLVector xTrain, final double w, final double b) {
         final int m = xTrain.dimension();
         final double[] f_wb = new double[m];
         for (int i = 0; i < m; i++) {
@@ -38,10 +25,27 @@ public class LinearRegression {
         return new DLVector(f_wb);
     }
 
-
-
-
-
+    /**
+     *
+     * @param x Dados. m exemplos
+     * @param y Valores alvo
+     * @param w Parâmetros do modelo
+     * @param b Parâmetros do modelo
+     * @return O custo total. O custo de usar os valores w e b como parâmetros para a regressão
+     * linear
+     */
+    public static double computeCost(final DLVector x, final DLVector y, final double w, final double b){
+        // Número de exemplos de treino
+        final int m = x.dimension();
+        double costSum = 0.0;
+        for (int i = 0; i < m; i++){
+            final double f_wb = w * x.component(i) + b;
+            final double cost = Math.pow(f_wb - y.component(i), 2);
+            costSum += cost;
+        }
+        final double totalCost = (1.0 / (2.0 * m)) * costSum;
+        return totalCost;
+    }
 
 
     public static void main(String[] args) {
@@ -51,12 +55,11 @@ public class LinearRegression {
         LOG.info(String.format("yTrain: %s", yTrain));
         final int m = xTrain.dimension();
         LOG.info(String.format("Número de exemplos de treino: %d", m));
-        final LinearRegression lr = new LinearRegression(xTrain,yTrain);
         final double xi = 1.2;
         final double w = 200.0;
         final double b = 100.0;
         final double cost1200sqft = w * xi + b;
-        LOG.info(String.format("Preço previsto para uma casa de %s sqft: %f", xi*1000, cost1200sqft));
+        LOG.info(String.format("Preço previsto para uma casa de %s sqft: %f", xi * 1000, cost1200sqft));
 
     }
 }
