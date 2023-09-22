@@ -7,7 +7,7 @@
 
 ### 1. Representação do Modelo
 
-### Objectivo:
+### Objectivo
 
 Vamos implementar o modelo $f_{w,b}$ para regressão linear com uma variável.
 
@@ -39,6 +39,7 @@ INFO: yTrain: [ 300.0, 500.0]
 ```
 
 #### Número de exemplos de treino
+
 Se $m$ for o número de exemplos de treino, temos:
 
 ```
@@ -102,3 +103,35 @@ LOG.info(String.format("Preço previsto para uma casa de %s sqft: %f", xi*1000, 
 INFO: Preço previsto para uma casa de 1200.0 sqft: 340,000000
 ```
 ### 2. Função de Custo
+
+### Objectivo
+
+Implementar a função de custo para a regressão linear com uma variável.
+
+### Problema
+
+Queremos um modelo que faça previsões de preços de casas quando lhe é dado o tamanho da casa.
+Vamos continuar com os mesmos dados:
+
+
+| Size (1000 sqft)     | Price (1000s of dollars) |
+| -------------------| ------------------------ |
+| 1.0               | 300                      |
+| 2.0               | 500                      |
+
+### Calcular o Custo
+
+![img_2.png](img_2.png)
+
+Neste contexto o custo é uma medida de quão bem o nosso modelo se está a comportar na previsão do preço das casas dados os seus tamanhos. No fundo é uma medida que nos permite avaliar se o nosso modelo está a fazer boas ou más previsões de preços.
+A equação para o custo, com uma variável é
+
+$J(w,b) = \frac{1}{2m} \sum\limits_{i = 0}^{m-1} (f_{w,b}(x^{(i)}) - y^{(i)})^2 \tag{1}$
+
+onde
+
+$$f_{w,b}(x^{(i)}) = wx^{(i)} + b \tag{2}$$
+
+- $f_{w,b}(x^{(i)})$ é a nossa previsão para o exemplo $i$ usando os parâmetros $w,b$.
+- $(f_{w,b}(x^{(i)}) -y^{(i)})^2$ é o quadrado da diferença entre o valor alvo e a previsão
+- Estas diferenças são somadas sobre todos os  $m$ exemplos e divididos por `2m` para produzir o custo  $J(w,b)$.  
