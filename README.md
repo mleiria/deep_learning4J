@@ -214,6 +214,7 @@ b &= b -  \alpha \frac{\partial J(w,b)}{\partial b}  \newline \rbrace
 
 onde os parâmetros $w$, $b$ sofrem um update em simultâneo.  
 O gradiente é definido como:
+
 $$\begin{align}
 \frac{\partial J(w,b)}{\partial w}  &= \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{w,b}(x^{(i)}) - y^{(i)})x^{(i)} \tag{4}\\
 \frac{\partial J(w,b)}{\partial b}  &= \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{w,b}(x^{(i)}) - y^{(i)}) \tag{5}\\
