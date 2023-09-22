@@ -28,7 +28,7 @@ Queremos ajustar um modelo de regressão linear (linha preta no gráfico) a este
 
 Consideremos os seguintes vectores:
 
-```
+```java
 final DLVector xTrain = new DLVector(new double[]{1.0, 2.0});
 final DLVector yTrain = new DLVector(new double[]{300.0, 500.0});
 LOG.info(String.format("xTrain: %s", xTrain));
@@ -43,7 +43,7 @@ INFO: yTrain: [ 300.0, 500.0]
 
 Se $m$ for o número de exemplos de treino, temos:
 
-```
+```java
 final int m = xTrain.dimension();
 LOG.info(String.format("Número de exemplos de treino: %d", m));
 ```
@@ -60,9 +60,7 @@ Vamos usar ($x^{(i)}$, $y^{(i)}$) para referir o exemplo de treino $i$
 
 A função modelo para a regressão linear (que é uma função que mapeia valores de $x$ para $y$) é representada como:
 
-```
 $$ f_{w,b}(x^{(i)}) = wx^{(i)} + b \tag{1}$$
-```
 
 Vamos calcular alguns valores de  $f_{w,b}(x^{(i)})$ para os dois pontos de dados:
 
@@ -70,7 +68,7 @@ Para $x^{(0)}$, `f_wb = w * x[0] + b`
 
 Para $x^{(1)}$, `f_wb = w * x[1] + b`
 
-```
+```java
     /**
      * @param xTrain Valores de treino
      * @param w Parâmetro do modelo
@@ -93,7 +91,7 @@ Para $x^{(1)}$, `f_wb = w * x[1] + b`
 Agora que temos o modelo, podemos fazer algumas previsões. O mais importante é calcular os valores ideias dos parâmetros $w$ e $b$.
 Por hora suponhamos que já temos bons valores para $w$ e $b$. Então, por exemplo, para prever o preço de uma casa com 1200sqft, temos:
 
-```
+```java
 final double xi = 1.2;
 final double w = 200.0;
 final double b = 100.0;
@@ -146,7 +144,7 @@ O custo calcula-se iterando sobre os exemplos.
 - esse valor é adicionado ao custo total
 A seguinte função calula o custo:
 
-```
+```java
     /**
      *
      * @param x Dados. m exemplos
@@ -170,6 +168,8 @@ A seguinte função calula o custo:
     }
 
 ```
+**Resumo:**
+
 ![img_4.png](img_4.png)
 
 ### 3. Gradiente Descendente
@@ -191,7 +191,7 @@ Mantemos as mesmas condições anteriores, i.e., temos os seguintes dados:
 
 E temos a função para calcular o custo (já definida anteriormente):
 
-```
+```java
 public static double computeCost(final DLVector x, final DLVector y, final double w, final double b){...}
 ```
 
@@ -201,7 +201,7 @@ public static double computeCost(final DLVector x, final DLVector y, final doubl
 Até agora desenvolvemos um modelo linear que prevê $f_{w,b}(x^{(i)})$:
 $$f_{w,b}(x^{(i)}) = wx^{(i)} + b \tag{1}$$
 
-Na regressão linear, usamos os dados de entrada para ajustar os parâmetros $w$,$b$ através da minimização da medida de erro entre a nossa previsão $f_{w,b}(x^{(i)})$ e os dados atuais $y^{(i)}$. A medida é chamada de custo ($cost$), $J(w,b)$. Na fase de treino medimos o custo sobre todos os exemplos de treino $x^{(i)},y^{(i)}$
+Na regressão linear, usamos os dados de entrada para ajustar os parâmetros $w$, $b$ através da minimização da medida de erro entre a nossa previsão $f_{w,b}(x^{(i)})$ e os dados atuais $y^{(i)}$. A medida é chamada de custo, $J(w,b)$. Na fase de treino medimos o custo sobre todos os exemplos de treino $x^{(i)},y^{(i)}$
 $$J(w,b) = \frac{1}{2m} \sum\limits_{i = 0}^{m-1} (f_{w,b}(x^{(i)}) - y^{(i)})^2\tag{2}$$ 
 
 
@@ -219,3 +219,9 @@ $$
 \frac{\partial J(w,b)}{\partial b}  &= \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{w,b}(x^{(i)}) - y^{(i)}) \tag{5}\\
 \end{align}
 $$
+
+### Implementação do Gradiente Descendente
+
+Vamos implementar o gradiente descendente para uma variável de entrada (no nosso exemplo é o tamanho da casa). Vamos precisar de três funções:
+
+- `computeGradient`
