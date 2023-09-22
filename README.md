@@ -4,6 +4,7 @@
 
 1. Representação do Modelo
 2. Função de Custo
+3. Gradiente Descendente
 
 ### 1. Representação do Modelo
 
@@ -126,7 +127,7 @@ Vamos continuar com os mesmos dados:
 Neste contexto o custo é uma medida de quão bem o nosso modelo se está a comportar na previsão do preço das casas dados os seus tamanhos. No fundo é uma medida que nos permite avaliar se o nosso modelo está a fazer boas ou más previsões de preços.
 A equação para o custo, com uma variável é
 
-$J(w,b) = \frac{1}{2m} \sum\limits_{i = 0}^{m-1} (f_{w,b}(x^{(i)}) - y^{(i)})^2 \tag{1}$
+$$J(w,b) = \frac{1}{2m} \sum\limits_{i = 0}^{m-1} (f_{w,b}(x^{(i)}) - y^{(i)})^2 \tag{1}$$
 
 onde
 
@@ -170,3 +171,51 @@ A seguinte função calula o custo:
 
 ```
 ![img_4.png](img_4.png)
+
+### 3. Gradiente Descendente
+
+![img_5.png](img_5.png)
+
+### Objectivo
+
+Automatizar o processo de otimização de $w$ e $b$ usando o gradiente descendente.
+
+### Problema
+
+Mantemos as mesmas condições anteriores, i.e., temos os seguintes dados:
+
+| Size (1000 sqft)     | Price (1000s of dollars) |
+| -------------------| ------------------------ |
+| 1.0               | 300                      |
+| 2.0               | 500                      |
+
+E temos a função para calcular o custo (já definida anteriormente):
+
+```
+public static double computeCost(final DLVector x, final DLVector y, final double w, final double b){...}
+```
+
+### Gradiente Descendente
+![img_6.png](img_6.png)
+
+Até agora desenvolvemos um modelo linear que prevê $f_{w,b}(x^{(i)})$:
+$$f_{w,b}(x^{(i)}) = wx^{(i)} + b \tag{1}$$
+
+Na regressão linear, usamos os dados de entrada para ajustar os parâmetros $w$,$b$ através da minimização da medida de erro entre a nossa previsão $f_{w,b}(x^{(i)})$ e os dados atuais $y^{(i)}$. A medida é chamada de custo ($cost$), $J(w,b)$. Na fase de treino medimos o custo sobre todos os exemplos de treino $x^{(i)},y^{(i)}$
+$$J(w,b) = \frac{1}{2m} \sum\limits_{i = 0}^{m-1} (f_{w,b}(x^{(i)}) - y^{(i)})^2\tag{2}$$ 
+
+
+O gradiente descendente é descrito como:
+
+$$\begin{align*} \text{repeat}&\text{ until convergence:} \; \lbrace \newline
+\;  w &= w -  \alpha \frac{\partial J(w,b)}{\partial w} \tag{3}  \; \newline
+b &= b -  \alpha \frac{\partial J(w,b)}{\partial b}  \newline \rbrace
+\end{align*}$$
+onde os parâmetros $w$, $b$ sofrem um update em simultâneo.  
+O gradiente é definido como:
+$$
+\begin{align}
+\frac{\partial J(w,b)}{\partial w}  &= \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{w,b}(x^{(i)}) - y^{(i)})x^{(i)} \tag{4}\\
+\frac{\partial J(w,b)}{\partial b}  &= \frac{1}{m} \sum\limits_{i = 0}^{m-1} (f_{w,b}(x^{(i)}) - y^{(i)}) \tag{5}\\
+\end{align}
+$$
