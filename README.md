@@ -6,7 +6,7 @@
 
 ### Objectivo:
 
-Vamos implementar o modelo $f_{w,b}$ para regressão linear com uma variável. $\sqrt{3x-1}+(1+x)^2$
+Vamos implementar o modelo $f_{w,b}$ para regressão linear com uma variável.
 
 ### Problema
 
@@ -47,5 +47,5 @@ LOG.info(String.format("Número de exemplos de treino: %d", m));
 INFO: Número de exemplos de treino: 2
 ```
 
-Vamos usar (x$^{(i)}$, y$^{(i)}$) para referir o exemplo de treino $i^{th}$
+Vamos usar ($x^{(i)}$, $y^{(i)}$) para referir o exemplo de treino $i^{th}$
 
