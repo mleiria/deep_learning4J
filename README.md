@@ -6,7 +6,7 @@
 
 ### Objectivo:
 
-Vamos implementar o modelo $f_{w,b}$ para regressão linear com uma variável.
+Vamos implementar o modelo $ f_{w,b} $ para regressão linear com uma variável.
 
 ### Problema
 
