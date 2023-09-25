@@ -24,7 +24,7 @@ Consideremos o caso simples da previsão do preço das casas.Por simplicidade co
 
 Queremos ajustar um modelo de regressão linear (linha preta no gráfico) a estes dados de forma a que possamos depois saber,por exemplo, qual o preço de uma casa com 1200 sqft
 
-![img.png](img.png)
+![img.png](images/img.png)
 
 Consideremos os seguintes vectores:
 
@@ -56,7 +56,7 @@ Vamos usar ($x^{(i)}$, $y^{(i)}$) para referir o exemplo de treino $i$
 
 ### A função modelo
 
-![img_1.png](img_1.png)
+![img_1.png](images/img_1.png)
 
 A função modelo para a regressão linear (que é uma função que mapeia valores de $x$ para $y$) é representada como:
 
@@ -120,7 +120,7 @@ Vamos continuar com os mesmos dados:
 
 ### Calcular o Custo
 
-![img_2.png](img_2.png)
+![img_2.png](images/img_2.png)
 
 Neste contexto o custo é uma medida de quão bem o nosso modelo se está a comportar na previsão do preço das casas dados os seus tamanhos. No fundo é uma medida que nos permite avaliar se o nosso modelo está a fazer boas ou más previsões de preços.
 A equação para o custo, com uma variável é
@@ -135,7 +135,7 @@ $$f_{w,b}(x^{(i)}) = wx^{(i)} + b \tag{2}$$
 - $(f_{w,b}(x^{(i)}) -y^{(i)})^2$ é o quadrado da diferença entre o valor alvo e a previsão
 - Estas diferenças são somadas sobre todos os  $m$ exemplos e divididos por `2m` para produzir o custo  $J(w,b)$.  
 
-![img_3.png](img_3.png)
+![img_3.png](images/img_3.png)
 
 O custo calcula-se iterando sobre os exemplos.
 
@@ -170,11 +170,11 @@ A seguinte função calula o custo:
 ```
 **Resumo:**
 
-![img_4.png](img_4.png)
+![img_4.png](images/img_4.png)
 
 ### 3. Gradiente Descendente
 
-![img_5.png](img_5.png)
+![img_5.png](images/img_5.png)
 
 ### Objectivo
 
@@ -196,7 +196,7 @@ public static double computeCost(final DLVector x, final DLVector y, final doubl
 ```
 
 ### Gradiente Descendente
-![img_6.png](img_6.png)
+![img_6.png](images/img_6.png)
 
 Até agora desenvolvemos um modelo linear que prevê $f_{w,b}(x^{(i)})$:
 $$f_{w,b}(x^{(i)}) = wx^{(i)} + b \tag{1}$$
