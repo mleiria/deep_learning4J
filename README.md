@@ -262,3 +262,7 @@ Convenção: Usamos a seguinte notação: $\frac{\partial J(w,b)}{\partial b}$  
     }
 ```
 
+### Gradiente Descendente
+Agora que os gradientes já podem ser calculados, precisamos de uma última função para calcular o gradiente:
+
+![img7.png](images/img_7.png)
