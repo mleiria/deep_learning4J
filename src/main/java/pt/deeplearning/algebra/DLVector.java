@@ -30,6 +30,10 @@ public class DLVector {
     public double component(final int n){
         return components[n];
     }
+
+    public double[] components(){
+        return components;
+    }
     /**
      * Represetnação em String do DLVector
      *

@@ -2,7 +2,8 @@ package pt.deeplearning.algebra;
 
 
 import org.junit.jupiter.api.Test;
-import pt.mleiria.StopWatch;
+import pt.mleiria.core.StopWatch;
+
 import java.util.logging.Logger;
 
 import static org.junit.jupiter.api.Assertions.*;

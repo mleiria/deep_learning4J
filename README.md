@@ -213,6 +213,7 @@ b &= b -  \alpha \frac{\partial J(w,b)}{\partial b}  \newline \rbrace
 \end{align*}$$
 
 onde os parâmetros $w$, $b$ sofrem um update em simultâneo.  
+
 O gradiente é definido como:
 
 $$\begin{align}
@@ -224,4 +225,40 @@ $$\begin{align}
 
 Vamos implementar o gradiente descendente para uma variável de entrada (no nosso exemplo é o tamanho da casa). Vamos precisar de três funções:
 
-- `computeGradient`
+- `computeGradient` Implementação das equações (4) e (5) acima
+- `computeCost` Implementação da equação (2). Já foi feito (ver acima)
+- `gradientDescent` Implementar usando o computeGradient e computeCost
+
+Convenção: Usamos a seguinte notação: $\frac{\partial J(w,b)}{\partial b}$  será `dj_db` e assim por diante.
+
+`computeGradient` implementa as equações (4) e (5) e retorna $\frac{\partial J(w,b)}{\partial w}$,$\frac{\partial J(w,b)}{\partial b}$
+
+```java
+    /**
+     * Calcula o gradiente para a regressão linear
+     * @param x Dados, m exemplos
+     * @param y Valores alvo
+     * @param w Parâmetro do modelo
+     * @param b Parâmetro do modelo
+     * @return GradientCost um DTO com duas variáveis:<br>
+     * dJdW ≥ O gradiente do custo relativamente aoparâmetro w<br>
+     * dJdB ≥ O gradiente do custo relativamente ao parâmetro b
+     */
+    public static GradientCost computeGradient(final DLVector x, final DLVector y, final double w, final double b) {
+        // Número de exemplos de treino
+        final int m = x.dimension();
+        double dJdW = 0.0;
+        double dJdB = 0.0;
+        for (int i = 0; i < m; i++) {
+            final double f_wb = w * x.component(i) + b;
+            final double dJdWi = (f_wb - y.component(i)) * x.component(i);
+            final double dJdBi = f_wb - y.component(i);
+            dJdW += dJdWi;
+            dJdB += dJdBi;
+        }
+        dJdW /= m;
+        dJdB /= m;
+        return new GradientCost(dJdW, dJdB);
+    }
+```
+

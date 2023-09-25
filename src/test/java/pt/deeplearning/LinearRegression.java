@@ -1,7 +1,7 @@
 package pt.deeplearning;
 
-import pt.deeplearning.algebra.DLMatrixUtils;
 import pt.deeplearning.algebra.DLVector;
+import pt.deeplearning.linearregression.GradientCost;
 
 import java.util.logging.Logger;
 
@@ -26,7 +26,6 @@ public class LinearRegression {
     }
 
     /**
-     *
      * @param x Dados. m exemplos
      * @param y Valores alvo
      * @param w Parâmetros do modelo
@@ -34,17 +33,44 @@ public class LinearRegression {
      * @return O custo total. O custo de usar os valores w e b como parâmetros para a regressão
      * linear
      */
-    public static double computeCost(final DLVector x, final DLVector y, final double w, final double b){
+    public static double computeCost(final DLVector x, final DLVector y, final double w, final double b) {
         // Número de exemplos de treino
         final int m = x.dimension();
         double costSum = 0.0;
-        for (int i = 0; i < m; i++){
+        for (int i = 0; i < m; i++) {
             final double f_wb = w * x.component(i) + b;
             final double cost = Math.pow(f_wb - y.component(i), 2);
             costSum += cost;
         }
         final double totalCost = (1.0 / (2.0 * m)) * costSum;
         return totalCost;
+    }
+
+    /**
+     * Calcula o gradiente para a regressão linear
+     * @param x Dados, m exemplos
+     * @param y Valores alvo
+     * @param w Parâmetro do modelo
+     * @param b Parâmetro do modelo
+     * @return GradientCost um DTO com duas variáveis:<br>
+     * dJdW ≥ O gradiente do custo relativamente aoparâmetro w<br>
+     * dJdB ≥ O gradiente do custo relativamente ao parâmetro b
+     */
+    public static GradientCost computeGradient(final DLVector x, final DLVector y, final double w, final double b) {
+        // Número de exemplos de treino
+        final int m = x.dimension();
+        double dJdW = 0.0;
+        double dJdB = 0.0;
+        for (int i = 0; i < m; i++) {
+            final double f_wb = w * x.component(i) + b;
+            final double dJdWi = (f_wb - y.component(i)) * x.component(i);
+            final double dJdBi = f_wb - y.component(i);
+            dJdW += dJdWi;
+            dJdB += dJdBi;
+        }
+        dJdW /= m;
+        dJdB /= m;
+        return new GradientCost(dJdW, dJdB);
     }
 
 
