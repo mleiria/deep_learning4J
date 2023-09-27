@@ -6,6 +6,13 @@
 2. Função de Custo
 3. Gradiente Descendente
 
+Nota: às vezes uso uma biblioteca minha de utilitários (ler ficheiros, escrever, prints,...). Não é fundamental para se perceber o código mas, de qualquer forma, fica aqui o link:
+
+https://github.com/mleiria/ml-lib.git
+
+
+
+
 ### 1. Representação do Modelo
 
 ### Objectivo
