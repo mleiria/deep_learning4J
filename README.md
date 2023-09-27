@@ -369,7 +369,7 @@ Ver graficamente o custo vs iterações é dos melhores indicadores do progresso
 
 ### Previsões
 
-Agora que descobrimos os valores ótimos dos parâmetros $\w$ e $\b$ podemos começar a usar o modelo para prever os preços das casas:
+Agora que descobrimos os valores ótimos dos parâmetros $w$ e $b$ podemos começar a usar o modelo para prever os preços das casas:
 
 ```java
 DLVector values = new DLVector(new double[]{1.0, 1.2, 2.0});
