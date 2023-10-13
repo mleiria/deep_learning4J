@@ -1,17 +1,13 @@
 package pt.deeplearning.stats;
 
-import lombok.Getter;
 import pt.deeplearning.algebra.DLVector;
 import pt.mleiria.dto.Pair;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
-import java.util.Vector;
 import java.util.function.Function;
 import java.util.logging.Logger;
 
-import static java.util.stream.Collectors.toList;
 import static pt.mleiria.collections.immutable.CollectionUtilities.dblArrToListFunc;
 import static pt.mleiria.collections.immutable.CollectionUtilities.foldLeft;
 
@@ -23,13 +19,9 @@ public class Stats {
 
     private final DLVector vector;
 
-    @Getter
     private final double min;
-    @Getter
     private final double max;
-    @Getter
     private final double sum;
-    @Getter
     private final double sumSqr;
 
     private static final Function<Pair<Double, Double>, Function<Double, Pair<Double, Double>>> funcMinMax =
@@ -106,4 +98,19 @@ public class Stats {
         return new DLVector(res);
     }
 
+    public double getMin() {
+        return min;
+    }
+
+    public double getMax() {
+        return max;
+    }
+
+    public double getSum() {
+        return sum;
+    }
+
+    public double getSumSqr() {
+        return sumSqr;
+    }
 }

@@ -3,8 +3,15 @@ package pt.deeplearning.algebra;
 import jdk.incubator.vector.DoubleVector;
 import jdk.incubator.vector.VectorSpecies;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+import java.util.concurrent.ForkJoinPool;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
+import java.util.stream.IntStream;
 
 import static java.lang.Math.random;
 
@@ -97,7 +104,7 @@ public class DLMatrixUtils {
         int n = matrixA.rows();
         int m = matrixA.columns();
 
-        return engine(n, m, matrixA, value, x -> y -> x + y);
+        return engineFP(n, m, matrixA, value, x -> y -> x + y);
     }
 
     /**
@@ -129,7 +136,7 @@ public class DLMatrixUtils {
     public static DLMatrix multiply(final DLMatrix matrix, final Double value) {
         int n = matrix.rows();
         int m = matrix.columns();
-        return engine(n, m, matrix, value, x -> y -> x * y);
+        return engineFP(n, m, matrix, value, x -> y -> x * y);
     }
 
     /**
@@ -137,7 +144,7 @@ public class DLMatrixUtils {
      * @return Uma Matrix with the values sqared
      */
     public static DLMatrix square(final DLMatrix matrix) {
-        return engine(matrix, x -> Math.pow(x, 2));
+        return engineFP(matrix, x -> Math.pow(x, 2));
     }
 
     /**
@@ -167,7 +174,7 @@ public class DLMatrixUtils {
      * @return Uma matriz Identidade
      */
     public static DLMatrix identity(final int rows, final int cols) {
-        return engine(rows, cols, x -> 1.0, (i, j) -> i.intValue() == j.intValue());
+        return engineFP(rows, cols, x -> 1.0, (i, j) -> i.intValue() == j.intValue());
     }
 
     /**
@@ -177,9 +184,10 @@ public class DLMatrixUtils {
      * @return A soma dos elementos da diagonal principal
      */
     public static double trace(final DLMatrix matrix) {
-        return engine(matrix, x -> x, (i, j) -> i.intValue() == j.intValue());
+        return engineFP(matrix, x -> x, (i, j) -> i.intValue() == j.intValue());
 
     }
+
 
     /**
      * Nº cols = Nº linhas
@@ -210,8 +218,38 @@ public class DLMatrixUtils {
         return new DLMatrix(res);
     }
 
-    // Vector Operations
+    public static DLMatrix mulFP(final DLMatrix a, final DLMatrix b) {
+        double[][] matrix1 = a.components;
+        double[][] matrix2 = b.components;
+        int numRows1 = matrix1.length;
+        int numCols1 = matrix1[0].length;
+        int numRows2 = matrix2.length;
+        int numCols2 = matrix2[0].length;
 
+        if (numCols1 != numRows2) {
+            throw new IllegalArgumentException("Matrix 1 columns must be equal to Matrix 2 rows for multiplication.");
+        }
+
+        // Create a result matrix
+        double[][] result = new double[numRows1][numCols2];
+
+        // Parallelize the matrix multiplication using a custom ForkJoinPool
+        ForkJoinPool customThreadPool = new ForkJoinPool(Runtime.getRuntime().availableProcessors());
+        customThreadPool.submit(() ->
+                IntStream.range(0, numRows1).parallel().forEach(i ->
+                        IntStream.range(0, numCols2).forEach(j -> {
+                            double sum = 0.0;
+                            for (int k = 0; k < numCols1; k++) {
+                                sum += matrix1[i][k] * matrix2[k][j];
+                            }
+                            result[i][j] = sum;
+                        })
+                )
+        ).join();
+
+        return new DLMatrix(result);
+    }
+    // Vector Operations
 
     /**
      * Compute the scalar product (or dot product) of two vectors.
@@ -254,6 +292,17 @@ public class DLMatrixUtils {
 
 
     // Engines
+
+    /**
+     * Deprecated. Use engineFP, a more functional approach version
+     *
+     * @param rows
+     * @param cols
+     * @param f
+     * @param p
+     * @return
+     */
+    @Deprecated
     private static DLMatrix engine(int rows, int cols, Function<Double, Double> f, BiPredicate<Integer, Integer> p) {
         final double[][] components = new double[rows][cols];
         // for each row
@@ -268,6 +317,24 @@ public class DLMatrixUtils {
         return new DLMatrix(components);
     }
 
+    private static DLMatrix engineFP(int rows, int cols, Function<Double, Double> f, BiPredicate<Integer, Integer> p) {
+        final double[][] components = new double[rows][cols];
+        IntStream.range(0, rows).forEach(i ->
+                IntStream.range(0, cols)
+                        .filter(j -> p.test(i, j))
+                        .forEach(j -> components[i][j] = f.apply(components[i][j])));
+        return new DLMatrix(components);
+    }
+
+    /**
+     * Deprecated. Use engineFP, a more functional approach version
+     *
+     * @param matrix
+     * @param f
+     * @param p
+     * @return
+     */
+    @Deprecated
     private static double engine(DLMatrix matrix, Function<Double, Double> f, BiPredicate<Integer, Integer> p) {
         double res = 0.0;
         // for each row
@@ -282,6 +349,17 @@ public class DLMatrixUtils {
         return res;
     }
 
+    private static double engineFP(DLMatrix matrix, Function<Double, Double> f, BiPredicate<Integer, Integer> p) {
+        return IntStream.range(0, matrix.rows())
+                .mapToDouble(i ->
+                        IntStream.range(0, matrix.columns())
+                                .filter(j -> p.test(i, j))
+                                .mapToDouble(j -> f.apply(matrix.component(i, j)))
+                                .sum())
+                .sum();
+    }
+
+    @Deprecated
     private static DLMatrix engine(final DLMatrix matrix, Function<Double, Double> f) {
         final double[][] components = new double[matrix.rows()][matrix.columns()];
         // for each row
@@ -294,6 +372,15 @@ public class DLMatrixUtils {
         return new DLMatrix(components);
     }
 
+    private static DLMatrix engineFP(final DLMatrix matrix, Function<Double, Double> f) {
+        final double[][] components = new double[matrix.rows()][matrix.columns()];
+        IntStream.range(0, matrix.rows()).forEach(i ->
+                IntStream.range(0, matrix.columns())
+                        .forEach(j -> components[i][j] = f.apply(matrix.components[i][j])));
+        return new DLMatrix(components);
+    }
+
+    @Deprecated
     private static DLMatrix engine(final int rows, final int cols,
                                    final DLMatrix matrixA, final Double value,
                                    Function<Double, Function<Double, Double>> oper) {
@@ -309,6 +396,16 @@ public class DLMatrixUtils {
         return new DLMatrix(components);
     }
 
+    private static DLMatrix engineFP(final int rows, final int cols,
+                                     final DLMatrix matrixA, final Double value,
+                                     Function<Double, Function<Double, Double>> oper) {
+
+        final double[][] components = new double[rows][cols];
+        IntStream.range(0, rows).forEach(i ->
+                IntStream.range(0, cols).forEach(j -> components[i][j] = oper.apply(matrixA.component(i, j)).apply(value)));
+        return new DLMatrix(components);
+    }
+
     private static DLMatrix engine(final int rows, final int cols,
                                    final DLMatrix matrixA, final DLMatrix matrixB,
                                    Function<Double, Function<Double, Double>> oper) {
@@ -318,7 +415,6 @@ public class DLMatrixUtils {
         for (int i = 0; i < rows; i++) {
             // for each column
             for (int j = 0; j < cols; j++) {
-                //components[i][j] = oper.apply(matrixA.component(i, j), matrixB.component(i, j));
                 components[i][j] = oper.apply(matrixA.component(i, j)).apply(matrixB.component(i, j));
             }
         }

@@ -23,7 +23,7 @@ class StatsTest {
         final DLVector dlVector = new DLVector(arr);
         final Stats stats = new Stats(dlVector);
         assertEquals(15.0, stats.getSum());
-        assertEquals(30.0, stats.getSumSqr());
+        assertEquals(55.0, stats.getSumSqr());
     }
 
     @Test
