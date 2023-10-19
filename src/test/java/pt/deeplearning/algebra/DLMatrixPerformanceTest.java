@@ -9,18 +9,20 @@ import java.util.List;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 class DLMatrixPerformanceTest {
+    private final int start = 500;
+    private final int end = 1000;
 
-    @Test
+    private final int inc = 200;
+
+    //@Test
     void matrixMultiplyPerformance() {
         final List<Result> results = new ArrayList<>();
         squareMatrix(results);
         rectagularMatrix(results);
-        System.out.println(results);
+        results.forEach(System.out::println);
     }
     private void squareMatrix(final List<Result> results){
-        final int start = 100;
-        final int end = 3000;
-        for (int i = start; i < end; i = i + 200) {
+        for (int i = start; i < end; i = i + inc) {
             final DLMatrix matrix1 = DLMatrixUtils.rand(i, i);
             final DLMatrix matrix2 = DLMatrixUtils.rand(i, i);
 
@@ -28,14 +30,14 @@ class DLMatrixPerformanceTest {
             System.out.println(matrixSize);
 
             final StopWatch sw1 = new StopWatch();
-            final DLMatrix matrixRes1 = DLMatrixUtils.mulFP(matrix1, matrix2);
+            final DLMatrix matrixRes1 = DLMatrixUtils.mulParallel(matrix1, matrix2);
             final String sw1Time = sw1.elapsedTime();
-            System.out.println("Matrix multiplication FP:   " + sw1Time);
+            System.out.println("Matrix multiplication Par:  " + sw1Time);
 
             final StopWatch sw2 = new StopWatch();
-            final DLMatrix matrixRes2 = DLMatrixUtils.mul(matrix1, matrix2);
+            final DLMatrix matrixRes2 = DLMatrixUtils.mulSeq(matrix1, matrix2);
             final String sw2Time = sw2.elapsedTime();
-            System.out.println("Matrix multiplication Imp:  " + sw2Time);
+            System.out.println("Matrix multiplication Seq:  " + sw2Time);
             results.add(new Result(matrixSize, sw1Time, sw2Time));
 
             System.out.println("--------------------------------------------------");
@@ -46,9 +48,7 @@ class DLMatrixPerformanceTest {
     }
 
     private void rectagularMatrix(final List<Result> results){
-        final int start = 100;
-        final int end = 3000;
-        for (int i = start; i < end; i = i + 200) {
+        for (int i = start; i < end; i = i + inc) {
             final DLMatrix matrix1 = DLMatrixUtils.rand(i, i*10);
             final DLMatrix matrix2 = DLMatrixUtils.rand(i*10, i);
 
@@ -56,14 +56,14 @@ class DLMatrixPerformanceTest {
             System.out.println(matrixSize);
 
             final StopWatch sw1 = new StopWatch();
-            final DLMatrix matrixRes1 = DLMatrixUtils.mulFP(matrix1, matrix2);
+            final DLMatrix matrixRes1 = DLMatrixUtils.mulParallel(matrix1, matrix2);
             final String sw1Time = sw1.elapsedTime();
-            System.out.println("Matrix multiplication FP:   " + sw1Time);
+            System.out.println("Matrix multiplication Par:   " + sw1Time);
 
             final StopWatch sw2 = new StopWatch();
-            final DLMatrix matrixRes2 = DLMatrixUtils.mul(matrix1, matrix2);
+            final DLMatrix matrixRes2 = DLMatrixUtils.mulSeq(matrix1, matrix2);
             final String sw2Time = sw2.elapsedTime();
-            System.out.println("Matrix multiplication Imp:  " + sw2Time);
+            System.out.println("Matrix multiplication Seq:  " + sw2Time);
             results.add(new Result(matrixSize, sw1Time, sw2Time));
 
             System.out.println("--------------------------------------------------");
@@ -72,7 +72,7 @@ class DLMatrixPerformanceTest {
         }
     }
 
-    private record Result (String matrixSize, String fp, String imp){}
+    private record Result (String matrixSize, String par, String seq){}
 
 
 }

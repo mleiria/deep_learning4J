@@ -3,14 +3,9 @@ package pt.deeplearning.algebra;
 import jdk.incubator.vector.DoubleVector;
 import jdk.incubator.vector.VectorSpecies;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
 import java.util.concurrent.ForkJoinPool;
 import java.util.function.BiPredicate;
 import java.util.function.Function;
-import java.util.stream.Collectors;
-import java.util.stream.DoubleStream;
 import java.util.stream.IntStream;
 
 import static java.lang.Math.random;
@@ -196,7 +191,7 @@ public class DLMatrixUtils {
      * @param b
      * @return
      */
-    public static DLMatrix mul(final DLMatrix a, final DLMatrix b) {
+    public static DLMatrix mulSeq(final DLMatrix a, final DLMatrix b) {
         int p = a.components[0].length; //cols
         int n = a.components.length; //rows
         int m = b.components[0].length; //cols
@@ -218,7 +213,7 @@ public class DLMatrixUtils {
         return new DLMatrix(res);
     }
 
-    public static DLMatrix mulFP(final DLMatrix a, final DLMatrix b) {
+    public static DLMatrix mulParallel(final DLMatrix a, final DLMatrix b) {
         double[][] matrix1 = a.components;
         double[][] matrix2 = b.components;
         int numRows1 = matrix1.length;

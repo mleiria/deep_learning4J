@@ -2,7 +2,6 @@ package pt.deeplearning.algebra;
 
 
 import org.junit.jupiter.api.Test;
-import pt.mleiria.core.StopWatch;
 
 import java.util.logging.Logger;
 
@@ -247,7 +246,7 @@ class DLMatrixTest {
             final DLMatrix matrixB = new DLMatrix(componentsMatrixB);
             LOG.info("Matrix b: \n" + matrixB.toString());
 
-            final DLMatrix result = DLMatrixUtils.mulFP(matrixA, matrixB);
+            final DLMatrix result = DLMatrixUtils.mulParallel(matrixA, matrixB);
             LOG.info("Matrix result: \n" + result.toString());
             assertEquals(3, result.rows());
             assertEquals(2, result.columns());
@@ -309,7 +308,7 @@ class DLMatrixTest {
         final DLMatrix matrixXTranspose = DLMatrixUtils.transpose(matrixX);
         LOG.info("Matrix X transpose: \n" + matrixXTranspose);
 
-        final DLMatrix y = DLMatrixUtils.mulFP(matrixR, matrixXTranspose);
+        final DLMatrix y = DLMatrixUtils.mulParallel(matrixR, matrixXTranspose);
 
         LOG.info("Matrix y: \n" + y);
         assertNotNull(y);
@@ -353,7 +352,7 @@ class DLMatrixTest {
         };
 
         //Old skool
-        DLMatrix matrixRes1 = DLMatrixUtils.mulFP(new DLMatrix(matrix1), new DLMatrix(matrix2));
+        DLMatrix matrixRes1 = DLMatrixUtils.mulParallel(new DLMatrix(matrix1), new DLMatrix(matrix2));
         assertTrue(matrixRes1 != null);
     }
 }
